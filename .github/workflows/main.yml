@@ -1,0 +1,25 @@
+name: Build APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Estrai lo ZIP
+      run: unzip Cervello-main-auto-import.zip
+    - name: Configura Java 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Dai i permessi a Gradle
+      run: chmod +x Cervello-main/gradlew
+    - name: Compila il file
+      run: |
+        cd Cervello-main
+        ./gradlew assembleDebug
+    - name: Rendi disponibile il download
+      uses: actions/upload-artifact@v4
+      with:
+        name: applicazione-di-prova
+        path: Cervello-main/app/build/outputs/apk/debug/*.apk
